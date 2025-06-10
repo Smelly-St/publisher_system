@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}Главная страница{% endblock %}
+
+{% block content %}
+<h1>Добро пожаловать!</h1>
+
+<div class="row g-4 mb-4">
+    <div class="col-md-3">
+        <div class="card text-white bg-info">
+            <div class="card-body">
+                <h5 class="card-title">Всего проектов</h5>
+                <p class="card-text display-6">{{ total_projects }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-warning text-dark">
+            <div class="card-body">
+                <h5 class="card-title">В работе</h5>
+                <p class="card-text display-6">{{ active_projects }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-success">
+            <div class="card-body">
+                <h5 class="card-title">Завершённые</h5>
+                <p class="card-text display-6">{{ completed_projects }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-secondary">
+            <div class="card-body">
+                <h5 class="card-title">Авторы</h5>
+                <p class="card-text display-6">{{ total_authors }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <h4>Недавние проекты</h4>
+        <ul class="list-group">
+            {% for project in recent_projects %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    {{ project.title }}
+                    <span class="badge bg-{{ project.status_badge }}">{{ project.get_status_display }}</span>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="col-md-6">
+        <h4>Последние авторы</h4>
+        <ul class="list-group">
+            {% for author in recent_authors %}
+                <li class="list-group-item">{{ author.full_name }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endblock %}

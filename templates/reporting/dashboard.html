@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block title %}
+Отчётная система
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .chart-container {
+        position: relative;
+        height: 400px;
+        width: 100%;
+        margin-bottom: 40px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<h2>Статистика проектов</h2>
+
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <div class="chart-container">
+            <canvas id="projectChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<!-- Статистика текстом -->
+<div class="mt-5">
+    <p><strong>Общее количество проектов:</strong> {{ total }}</p>
+    <p><strong>Новых:</strong> {{ new }}</p>
+    <p><strong>В работе:</strong> {{ in_progress }}</p>
+    <p><strong>Завершённых:</strong> {{ completed }}</p>
+</div>
+
+<!-- Пример таблицы проектов -->
+<div class="mt-5">
+    <h3>Проекты по статусам</h3>
+    {% if projects %}
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Название</th>
+                <th>Статус</th>
+                <th>Сроки</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for project in projects %}
+            <tr>
+                <td>{{ project.title }}</td>
+                <td>{{ project.get_status_display }}</td>
+                <td>{{ project.start_date }} – {{ project.end_date }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>Нет активных проектов.</p>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+    const ctx = document.getElementById('projectChart').getContext('2d');
+    const projectChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Новые', 'В работе', 'Завершённые'],
+            datasets: [{
+                label: 'Количество проектов',
+                data: [{{ new }}, {{ in_progress }}, {{ completed }}],
+                backgroundColor: ['#007bff', '#ffc107', '#28a745'],
+                borderColor: ['#007bff', '#ffc107', '#28a745'],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: false },
+                title: {
+                    display: true,
+                    text: 'Проекты по статусам'
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1
+                    }
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}

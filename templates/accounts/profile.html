@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% block title %}
+Личный кабинет — {{ user.username }}
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .card-profile {
+        max-width: 300px;
+        margin: auto;
+    }
+    .chart-container {
+        position: relative;
+        height: 400px;
+        width: 100%;
+        margin-top: 30px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<h2>Личный кабинет</h2>
+
+<div class="row g-4">
+    <div class="col-md-4 offset-md-4 card-profile">
+        <div class="card shadow-sm text-center p-3">
+            {% if profile.avatar %}
+                <img src="{{ profile.avatar.url }}" alt="Аватар" width="100" class="rounded-circle mb-3">
+            {% endif %}
+            <h5>{{ user.get_full_name|default:user.username }}</h5>
+            <p class="text-muted">{{ user.email }}</p>
+        </div>
+    </div>
+</div>
+
+<div class="mt-5">
+    <h4>Статистика проектов</h4>
+    <ul class="list-group">
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            Всего проектов
+            <span class="badge bg-primary rounded-pill">{{ total_projects }}</span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            В работе
+            <span class="badge bg-warning rounded-pill">{{ active_projects }}</span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            Завершённые
+            <span class="badge bg-success rounded-pill">{{ completed_projects }}</span>
+        </li>
+    </ul>
+</div>
+
+<!-- История действий -->
+<div class="mt-5">
+    <h4>Последние действия</h4>
+    {% if logs %}
+        <ul class="list-group">
+            {% for log in logs %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    {% if log.action_flag == 1 %}
+                        Добавлено: {{ log.object_repr }}
+                    {% elif log.action_flag == 2 %}
+                        Изменено: {{ log.object_repr }}
+                    {% elif log.action_flag == 3 %}
+                        Удалено: {{ log.object_repr }}
+                    {% else %}
+                        Неизвестное действие: {{ log.object_repr }}
+                    {% endif %}
+                    <small class="text-muted">{{ log.action_time }}</small>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="text-muted">Нет записей о действиях.</p>
+    {% endif %}
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+    const ctx = document.getElementById('projectChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['В работе', 'Завершённые'],
+            datasets: [{
+                label: 'Проекты',
+                data: [{{ active_projects }}, {{ completed_projects }}],
+                backgroundColor: ['#ffc107', '#28a745']
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: false },
+                title: {
+                    display: true,
+                    text: 'Проекты'
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1
+                    }
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}

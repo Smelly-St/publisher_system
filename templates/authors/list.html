@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}
+Авторы
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Авторы</h2>
+    <a href="{% url 'author-create' %}" class="btn btn-success">+ Новый автор</a>
+</div>
+
+<div class="row g-4">
+    {% for author in authors %}
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h5 class="card-title">{{ author.full_name }}</h5>
+                    <p class="card-text text-muted">{{ author.contact_info|default:"Нет информации" }}</p>
+
+                    <h6>Договоры:</h6>
+                    {% if author.contract_set.all %}
+                        <ul class="list-group list-group-flush mb-3">
+                            {% for contract in author.contract_set.all %}
+                                <li class="list-group-item">
+                                    {{ contract.contract_number }}<br>
+                                    {{ contract.signed_date }}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p class="text-muted">Нет договоров</p>
+                    {% endif %}
+
+                    <a href="{% url 'author-edit' author.id %}" class="btn btn-warning btn-sm">Редактировать</a>
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <p class="text-muted">Нет авторов.</p>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block title %}
+Список проектов
+{% endblock %}
+
+{% block content %}
+<!-- Кнопка создания проекта -->
+<div class="d-flex justify-content-end mb-4">
+    <a href="{% url 'project-create' %}" class="btn btn-success">+ Новый проект</a>
+</div>
+
+<h2>Проекты</h2>
+
+<!-- Форма фильтрации -->
+<form method="get" class="mb-4">
+    <div class="row g-3">
+        <div class="col-md-3">
+            <label for="status" class="form-label">Статус</label>
+            <select name="status" id="status" class="form-select">
+                <option value="">Все статусы</option>
+                {% for key, display in STATUS_CHOICES %}
+                    <option value="{{ key }}" {% if status == key %}selected{% endif %}>
+                        {{ display }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="col-md-3">
+            <label for="from_date" class="form-label">Дата начала (с)</label>
+            <input type="date" name="from" id="from_date" class="form-control" value="{{ from_date }}">
+        </div>
+
+        <div class="col-md-3">
+            <label for="to_date" class="form-label">Дата окончания (по)</label>
+            <input type="date" name="to" id="to_date" class="form-control" value="{{ to_date }}">
+        </div>
+
+        <div class="col-md-3 d-flex align-self-end">
+            <button type="submit" class="btn btn-primary me-2">Применить</button>
+            <a href="{% url 'project-list' %}" class="btn btn-secondary">Сбросить</a>
+        </div>
+    </div>
+</form>
+
+<!-- Список проектов -->
+<div class="row g-4">
+    {% for project in projects %}
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h5 class="card-title">{{ project.title }}</h5>
+                    <p class="card-text mb-2">
+                        <strong>Статус:</strong>
+                        {% if project.status == 'new' %}
+                            <span class="badge bg-primary">{{ project.get_status_display }}</span>
+                        {% elif project.status == 'in_progress' %}
+                            <span class="badge bg-warning text-dark">{{ project.get_status_display }}</span>
+                        {% else %}
+                            <span class="badge bg-success">{{ project.get_status_display }}</span>
+                        {% endif %}
+                    </p>
+                    <p class="card-text text-muted">
+                        {{ project.start_date }} — {{ project.end_date }}
+                    </p>
+                    <a href="#" class="btn btn-outline-secondary btn-sm">Подробнее</a>
+                    <a href="{% url 'project-edit' project.id %}" class="btn btn-warning btn-sm">Редактировать</a>
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <div class="alert alert-info">Нет активных проектов.</div>
+    {% endfor %}
+</div>
+{% endblock %}
