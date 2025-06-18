@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Рукописи{% endblock %}
+
+{% block content %}
+<h2>Список рукописей</h2>
+
+<div class="row g-4">
+    {% for manuscript in manuscripts %}
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h5>{{ manuscript.title }}</h5>
+                    <p class="text-muted">Проект: {{ manuscript.project.title }}</p>
+                    <p><strong>Дата загрузки:</strong> {{ manuscript.uploaded_at|date:"d.m.Y H:i" }}</p>
+                    <a href="{{ manuscript.file.url }}" download class="btn btn-primary btn-sm">Скачать</a>
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <p class="text-muted">Нет рукописей.</p>
+    {% endfor %}
+</div>
+
+<a href="{% url 'manuscripts:manuscript-upload' %}" class="btn btn-success">+ Загрузить рукопись</a>
+{% endblock %}

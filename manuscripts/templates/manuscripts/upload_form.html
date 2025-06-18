@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Загрузить рукопись{% endblock %}
+
+{% block content %}
+<h2>Загрузить новую рукопись</h2>
+
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    
+    <div class="mb-3">
+        <label for="{{ form.project.id_for_label }}" class="form-label">Проект</label>
+        {{ form.project }}
+    </div>
+
+    <div class="mb-3">
+        <label for="{{ form.title.id_for_label }}" class="form-label">Название рукописи</label>
+        {{ form.title }}
+    </div>
+
+    <div class="mb-3">
+        <label for="{{ form.file.id_for_label }}" class="form-label">Файл рукописи</label>
+        {{ form.file }}
+    </div>
+
+    <div class="mb-3">
+        <label for="{{ form.author.id_for_label }}" class="form-label">Автор рукописи</label>
+        {{ form.author }}
+    </div>
+
+    <button type="submit" class="btn btn-primary">{{ form_title }}</button>
+    <a href="{% url 'manuscripts:manuscript-list' %}" class="btn btn-secondary">Отмена</a>
+</form>
+{% endblock %}

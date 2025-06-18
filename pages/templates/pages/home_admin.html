@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}Главная — Издательство{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2><b>Добро пожаловать, Администратор!</b></h2>
+
+    <div class="row g-4 mt-4">
+        <div class="col-md-3">
+            <div class="card shadow-sm text-center p-3">
+                <h5 class="card-title">Проектов всего</h5>
+                <p class="display-6">{{ total_projects }}</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow-sm text-center p-3">
+                <h5 class="card-title">Активные проекты</h5>
+                <p class="display-6">{{ active_projects }}</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow-sm text-center p-3">
+                <h5 class="card-title">Завершённые проекты</h5>
+                <p class="display-6">{{ completed_projects }}</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <button type="button" class="btn btn-primary">
+   <a href="{% url 'projects:project-list' %}" class="btn btn-primary">Перейти к проектам</a>
+</button>
+        </div>
+    </div>
+
+    <hr class="my-5">
+
+
+<h4 class="mb-3"><b>Новые задачи</b></h4>
+{% for task in recent_tasks %}
+    <div class="col-md-4 mb-4">
+        <div class="card shadow-sm h-100">
+            <div class="card-body">
+                <h5>{{ task.title }}</h5>
+                <p class="text-muted">{{ task.description|truncatewords:10 }}</p>
+                <span class="badge bg-warning text-dark">{{ task.status }}</span>
+            </div>
+        </div>
+    </div>
+{% empty %}
+    <p class="text-muted">Нет активных задач.</p>
+{% endfor %}
+
+    <hr class="my-5">
+
+    <h4 class="mb-3"><b>Недавние проекты</b></h4>
+    <div class="row g-4 mt-3">
+        {% for project in recent_projects %}
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ project.title }}</h5>
+                        <p class="text-muted">Старт: {{ project.start_date|date:"d.m.Y" }}</p>
+                        <p>Бюджет:{{ project.budget }} руб.</p>
+                        <a href="{% url 'projects:project-detail' project.id %}" class="btn btn-outline-secondary btn-sm">Подробнее</a>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <p class="text-muted">Новых проектов нет</p>
+        {% endfor %}
+    </div>
+{% endblock %}
