@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Вход в систему{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <h3>Войдите в систему</h3>
+
+            {% if form.errors %}
+                <div class="alert alert-danger">
+                    Неправильный логин или пароль.
+                </div>
+            {% endif %}
+
+            <form method="post">
+                {% csrf_token %}
+                
+                <div class="mb-3">
+                    <label for="{{ form.username.id_for_label }}" class="form-label">Имя пользователя</label>
+                    {{ form.username }}
+                </div>
+
+                <div class="mb-3">
+                    <label for="{{ form.password.id_for_label }}" class="form-label">Пароль</label>
+                    {{ form.password }}
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100">Войти</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Задачи{% endblock %}
+
+{% block content %}
+<h2>Список задач</h2>
+
+<div class="row g-4">
+    {% for task in tasks %}
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h5>{{ task.title }}</h5>
+                    <p class="text-muted">{{ task.get_status_display }}</p>
+                    <p><strong>Проект:</strong> {{ task.project.title }}</p>
+                    <p><strong>Исполнитель:</strong> {{ task.assignee.user.username }}</p>
+                    <a href="{% url 'tasks:task-edit' task.id %}" class="btn btn-outline-secondary btn-sm">Подробнее</a>
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <p class="text-muted">Нет активных задач.</p>
+    {% endfor %}
+</div>
+
+<a href="{% url 'tasks:task-create' %}" class="btn btn-success">+ Новая задача</a>
+{% endblock %}

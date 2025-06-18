@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}{{ form_title }}{% endblock %}
+
+{% block content %}
+<h2>{{ form_title }}</h2>
+
+<form method="post">
+    {% csrf_token %}
+    
+    <div class="mb-3">
+        <label for="{{ form.title.id_for_label }}" class="form-label">Название задачи</label>
+        {{ form.title }}
+    </div>
+
+    <div class="mb-3">
+        <label for="{{ form.description.id_for_label }}" class="form-label">Описание</label>
+        {{ form.description }}
+    </div>
+
+    <div class="mb-3">
+        <label for="{{ form.due_date.id_for_label }}" class="form-label">Срок выполнения</label>
+        {{ form.due_date }}
+    </div>
+
+    <div class="mb-3">
+        <label for="{{ form.assignees.id_for_label }}" class="form-label">Исполнители</label>
+        {{ form.assignees }}
+    </div>
+
+    <button type="submit" class="btn btn-primary">{{ form_title }}</button>
+    <a href="{% url 'tasks:task-list' %}" class="btn btn-secondary">Отмена</a>
+</form>
+{% endblock %}
