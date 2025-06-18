@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Список авторов{% endblock %}
+
+{% block content %}
+<h2>Авторы</h2>
+
+<div class="row g-4">
+    {% for author in authors %}
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h5>{{ author.full_name }}</h5>
+                    <p class="text-muted">{{ author.contact_info|default:"—" }}</p>
+                    {% if author.contract %}
+                        <a href="{{ author.contract.url }}" download class="btn btn-outline-secondary btn-sm">Договор</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <p class="text-muted">Нет авторов.</p>
+    {% endfor %}
+</div>
+
+<a href="{% url 'authors:author-create' %}" class="btn btn-primary">+ Новый автор</a>
+{% endblock %}
