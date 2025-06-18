@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Список сотрудников{% endblock %}
+
+{% block content %}
+<h2>Сотрудники издательства</h2>
+
+<select id="role-filter" onchange="filterStaff()">
+    <option value="">Все</option>
+    <option value="admin">Администраторы</option>
+    <option value="manager">Менеджеры</option>
+    <option value="editor">Редакторы</option>
+    <option value="printer">Типография</option>
+</select>
+
+<div id="staff-cards" class="row g-4 mt-3">
+    {% for user_profile in users %}
+        <div class="col-md-4 staff-card" data-role="{{ user_profile.role }}">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h5>{{ user_profile.user.get_full_name|default:user_profile.user.username }}</h5>
+                    <p class="text-muted">{{ user_profile.get_role_display }}</p>
+                    <p><strong>Контакт:</strong> {{ user_profile.phone|default:"—" }}</p>
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <p class="text-muted">Нет сотрудников.</p>
+    {% endfor %}
+</div>
+
+<script>
+function filterStaff() {
+    const selectedRole = document.getElementById("role-filter").value;
+    const cards = document.querySelectorAll(".staff-card");
+
+    cards.forEach(card => {
+        if (!selectedRole || card.getAttribute("data-role") === selectedRole) {
+            card.style.display = "";
+        } else {
+            card.style.display = "none";
+        }
+    });
+}
+</script>
+{% endblock %}
